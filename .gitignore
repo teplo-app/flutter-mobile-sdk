@@ -37,3 +37,4 @@ coverage/
 .metadata
 .packages
  pubspec.lock
+.history/

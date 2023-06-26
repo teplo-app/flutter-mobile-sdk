@@ -127,7 +127,8 @@ class Api {
   }
 
   Future<dynamic> checkout(PrivateCreditCard creditCard, String? token,
-      String? email, String? callbackUrl) {
+      String? email, String? callbackUrl,
+      {bool? verification}) {
     final Map<String, dynamic> request = HashMap();
     request['card_number'] = creditCard.cardNumber;
     request['expiry_date'] =

@@ -33,13 +33,17 @@ class CloudipspWebViewImpl extends StatelessWidget implements CloudipspWebView {
       : _confirmation = confirmation as PrivateCloudipspWebViewConfirmation?,
         super(key: key);
 
-  void _onWebViewCreated(WebViewController controller) {
-    if (_confirmation != null) {
-      controller.evaluateJavascript(ADD_VIEWPORT_METADATA);
-      controller.loadUrl(Uri.dataFromString(_confirmation!.response.body,
-              mimeType: 'text/html', encoding: Encoding.getByName('utf-8'))
-          .toString());
-    }
+  // TODO move to state
+  WebViewController _onWebViewCreated() {
+    var controller = WebViewController();
+    controller.setJavaScriptMode(JavaScriptMode.unrestricted);
+
+    controller.runJavaScript(ADD_VIEWPORT_METADATA);
+    controller.loadRequest(Uri.dataFromString(_confirmation!.response.body,
+        mimeType: 'text/html', encoding: Encoding.getByName('utf-8')));
+    controller.setNavigationDelegate(
+        NavigationDelegate(onNavigationRequest: _navigationDelegate));
+    return controller;
   }
 
   NavigationDecision _navigationDelegate(NavigationRequest request) {
@@ -76,10 +80,6 @@ class CloudipspWebViewImpl extends StatelessWidget implements CloudipspWebView {
 
   @override
   Widget build(BuildContext context) {
-    return WebView(
-        initialUrl: 'about:blank',
-        javascriptMode: JavascriptMode.unrestricted,
-        navigationDelegate: _navigationDelegate,
-        onWebViewCreated: _onWebViewCreated);
+    return WebViewWidget(controller: _onWebViewCreated());
   }
 }

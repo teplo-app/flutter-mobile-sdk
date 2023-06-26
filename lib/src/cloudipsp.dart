@@ -106,7 +106,8 @@ class CloudipspImpl implements Cloudipsp {
   }
 
   @override
-  Future<Receipt?> pay(CreditCard? card, Order? order) async {
+  Future<Receipt?> pay(CreditCard? card, Order? order,
+      {bool? verification}) async {
     if (card == null) {
       throw ArgumentError.notNull("card");
     }
